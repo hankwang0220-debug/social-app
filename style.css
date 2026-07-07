@@ -1,0 +1,277 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", "Microsoft JhengHei", sans-serif;
+  background: linear-gradient(160deg, #2b1a4a, #12081f);
+  color: #f3eefc;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+.app {
+  width: 100%;
+  max-width: 560px;
+  padding: 24px 16px 40px;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 2rem;
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  color: #b9a8d8;
+  margin-bottom: 20px;
+}
+
+/* --- 主題切換列 --- */
+.themes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.themes button {
+  padding: 8px 18px;
+  border: 2px solid #5d3f8f;
+  border-radius: 20px;
+  background: transparent;
+  color: #d9ccf3;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.themes button.active {
+  background: #7c4dff;
+  border-color: #7c4dff;
+  color: #fff;
+  font-weight: bold;
+}
+
+.theme-actions {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.theme-actions input {
+  padding: 7px 12px;
+  border: 1px solid #5d3f8f;
+  border-radius: 8px;
+  background: #1d0f33;
+  color: #f3eefc;
+  width: 180px;
+}
+
+.theme-actions button {
+  padding: 7px 12px;
+  border: none;
+  border-radius: 8px;
+  background: #3c2a63;
+  color: #d9ccf3;
+  cursor: pointer;
+}
+
+.theme-actions button:hover {
+  background: #5d3f8f;
+}
+
+/* --- 轉盤 --- */
+.wheel-wrap {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 16px;
+}
+
+#wheel {
+  max-width: min(90vw, 420px);
+  height: auto;
+  display: block;
+}
+
+.pointer {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 16px solid transparent;
+  border-right: 16px solid transparent;
+  border-top: 28px solid #ffd166;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5));
+  z-index: 2;
+}
+
+#spinBtn {
+  display: block;
+  margin: 0 auto 28px;
+  padding: 14px 56px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 32px;
+  background: linear-gradient(135deg, #ff7b54, #ffd166);
+  color: #3a1d00;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(255, 123, 84, 0.4);
+}
+
+#spinBtn:hover {
+  transform: scale(1.04);
+}
+
+#spinBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* --- 結果視窗 --- */
+.result-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 4, 16, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.result-overlay.hidden {
+  display: none;
+}
+
+.result-card {
+  background: #2b1a4a;
+  border: 2px solid #7c4dff;
+  border-radius: 20px;
+  padding: 36px 44px;
+  animation: pop 0.35s ease;
+}
+
+@keyframes pop {
+  from { transform: scale(0.6); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.result-label {
+  color: #b9a8d8;
+  margin-bottom: 10px;
+}
+
+.result-text {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #ffd166;
+  margin-bottom: 24px;
+}
+
+.result-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.result-buttons button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+#againBtn {
+  background: #3c2a63;
+  color: #d9ccf3;
+}
+
+#closeBtn {
+  background: #7c4dff;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* --- 選項編輯區 --- */
+.editor {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: left;
+}
+
+.editor h2 {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  color: #d9ccf3;
+}
+
+#optionList {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+#optionList li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #3c2a63;
+  border-radius: 16px;
+  padding: 6px 8px 6px 14px;
+}
+
+#optionList li button {
+  border: none;
+  background: transparent;
+  color: #b9a8d8;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+#optionList li button:hover {
+  color: #ff7b54;
+}
+
+.add-option {
+  display: flex;
+  gap: 8px;
+}
+
+.add-option input {
+  flex: 1;
+  padding: 9px 14px;
+  border: 1px solid #5d3f8f;
+  border-radius: 10px;
+  background: #1d0f33;
+  color: #f3eefc;
+  font-size: 1rem;
+}
+
+.add-option button {
+  padding: 9px 22px;
+  border: none;
+  border-radius: 10px;
+  background: #7c4dff;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+footer {
+  margin-top: 24px;
+  font-size: 0.85rem;
+  color: #6d5a8f;
+}

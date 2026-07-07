@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>命運轉盤 | 選擇困難救星</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header>
+      <h1>🎡 命運轉盤</h1>
+      <p class="subtitle">選擇困難嗎？讓轉盤幫你決定！</p>
+    </header>
+
+    <!-- 主題切換列 -->
+    <nav class="themes" id="themeTabs"></nav>
+    <div class="theme-actions">
+      <input type="text" id="newThemeInput" placeholder="新主題名稱，例如：宵夜" maxlength="10">
+      <button id="addThemeBtn">＋新增主題</button>
+      <button id="deleteThemeBtn" title="刪除目前主題">🗑 刪除主題</button>
+    </div>
+
+    <!-- 轉盤 -->
+    <div class="wheel-wrap">
+      <div class="pointer"></div>
+      <canvas id="wheel" width="420" height="420"></canvas>
+    </div>
+    <button id="spinBtn">開始轉！</button>
+
+    <!-- 結果視窗 -->
+    <div class="result-overlay hidden" id="resultOverlay">
+      <div class="result-card">
+        <p class="result-label">🎉 命運選中了 🎉</p>
+        <p class="result-text" id="resultText"></p>
+        <div class="result-buttons">
+          <button id="againBtn">再轉一次</button>
+          <button id="closeBtn">就決定是你了！</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 選項編輯區 -->
+    <section class="editor">
+      <h2>編輯「<span id="currentThemeName"></span>」的選項</h2>
+      <ul id="optionList"></ul>
+      <div class="add-option">
+        <input type="text" id="newOptionInput" placeholder="輸入新選項，例如：火鍋" maxlength="12">
+        <button id="addOptionBtn">加入</button>
+      </div>
+    </section>
+
+    <footer>
+      <p>由 hankwang ＆ ben16172007 共同製作 🎮</p>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
