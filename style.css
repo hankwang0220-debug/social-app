@@ -86,6 +86,32 @@ header h1 {
   background: #5d3f8f;
 }
 
+#nearbyBtn {
+  margin-bottom: 20px;
+  padding: 9px 24px;
+  border: 2px solid #06d6a0;
+  border-radius: 20px;
+  background: transparent;
+  color: #06d6a0;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+#nearbyBtn:hover {
+  background: rgba(6, 214, 160, 0.15);
+}
+
+#nearbyBtn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+#mapBtn {
+  background: #06d6a0;
+  color: #06301f;
+  font-weight: bold;
+}
+
 /* --- 轉盤 --- */
 .wheel-wrap {
   position: relative;

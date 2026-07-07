@@ -396,6 +396,94 @@ function renderPresets() {
   });
 }
 
+// --- 附近店家（用定位找出附近的真實餐廳，變成轉盤選項） ---
+
+var NEARBY_THEME = "📍附近店家";
+
+function findNearby() {
+  if (!navigator.geolocation) {
+    alert("這個瀏覽器不支援定位功能");
+    return;
+  }
+  var btn = document.getElementById("nearbyBtn");
+  btn.disabled = true;
+  btn.textContent = "📍 定位中…";
+
+  navigator.geolocation.getCurrentPosition(
+    function (pos) {
+      btn.textContent = "📍 搜尋附近店家中…";
+      fetchNearbyStores(pos.coords.latitude, pos.coords.longitude);
+    },
+    function (err) {
+      resetNearbyBtn();
+      if (err.code === 1) {
+        alert("你拒絕了定位權限。請在瀏覽器網址列旁允許「位置」權限後再試一次。");
+      } else {
+        alert("定位失敗，請稍後再試。");
+      }
+    },
+    { timeout: 10000 }
+  );
+}
+
+function fetchNearbyStores(lat, lon) {
+  // 用 OpenStreetMap 的免費 Overpass API 查詢 800 公尺內有名字的餐廳
+  var query =
+    '[out:json][timeout:15];' +
+    '(node["amenity"~"restaurant|fast_food|cafe"]["name"](around:800,' + lat + ',' + lon + ');' +
+    'way["amenity"~"restaurant|fast_food|cafe"]["name"](around:800,' + lat + ',' + lon + '););' +
+    'out center 40;';
+
+  fetch("https://overpass-api.de/api/interpreter", {
+    method: "POST",
+    body: "data=" + encodeURIComponent(query),
+  })
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      var names = [];
+      (data.elements || []).forEach(function (el) {
+        var name = el.tags && el.tags.name;
+        if (name && names.indexOf(name) === -1) names.push(name);
+      });
+
+      if (names.length < 2) {
+        resetNearbyBtn();
+        alert("附近的地圖資料裡找不到足夠的店家 😢\n可以改用轉盤選「吃什麼類型」，再按結果視窗的「📍 用地圖找」。");
+        return;
+      }
+
+      // 隨機挑最多 12 家，名字太長的截短以免轉盤塞不下
+      names.sort(function () { return Math.random() - 0.5; });
+      var picked = names.slice(0, 12).map(function (n) {
+        return n.length > 10 ? n.slice(0, 9) + "…" : n;
+      });
+
+      state.themes[NEARBY_THEME] = { options: picked, disabled: [] };
+      currentTheme = NEARBY_THEME;
+      saveState();
+      resetNearbyBtn();
+      renderAll();
+    })
+    .catch(function () {
+      resetNearbyBtn();
+      alert("店家資料抓取失敗，可能是網路問題，請稍後再試。");
+    });
+}
+
+function resetNearbyBtn() {
+  var btn = document.getElementById("nearbyBtn");
+  btn.disabled = false;
+  btn.textContent = "📍 找附近店家來轉";
+}
+
+// 轉出結果後，開 Google 地圖搜尋附近的店
+function openMap() {
+  var result = document.getElementById("resultText").textContent;
+  // 如果轉的是「附近店家」，直接搜店名；否則搜「附近的 + 食物類型」
+  var keyword = currentTheme === NEARBY_THEME ? result : "附近的 " + result;
+  window.open("https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(keyword), "_blank");
+}
+
 // --- 畫面總更新 ---
 
 function renderAll() {
@@ -419,6 +507,8 @@ document.getElementById("deleteThemeBtn").addEventListener("click", deleteTheme)
 document.getElementById("addOptionBtn").addEventListener("click", addOption);
 document.getElementById("keepAllBtn").addEventListener("click", keepAll);
 document.getElementById("savePresetBtn").addEventListener("click", savePreset);
+document.getElementById("nearbyBtn").addEventListener("click", findNearby);
+document.getElementById("mapBtn").addEventListener("click", openMap);
 
 // 在輸入框按 Enter 也能送出
 document.getElementById("newOptionInput").addEventListener("keydown", function (e) {
