@@ -400,19 +400,52 @@ function renderPresets() {
 
 var NEARBY_THEME = "📍附近店家";
 
-function findNearby() {
+// 各種食物在店名中常見的關鍵字（用來過濾附近的店）
+var FOOD_KEYWORDS = {
+  "滷肉飯": "滷肉飯|魯肉飯",
+  "牛肉麵": "牛肉麵",
+  "火鍋": "火鍋|鍋物|涮涮鍋|石頭鍋",
+  "壽司": "壽司|sushi",
+  "鹹酥雞": "鹹酥雞|鹽酥雞|炸物",
+  "義大利麵": "義大利麵|義式|pasta",
+  "便當": "便當|自助餐",
+  "麥當勞": "麥當勞|McDonald",
+  "拉麵": "拉麵|ramen",
+  "咖哩飯": "咖哩",
+  "水餃": "水餃|餃子",
+  "炒飯": "炒飯",
+  "牛排": "牛排",
+  "披薩": "披薩|比薩|pizza",
+  "燒肉丼": "丼|燒肉",
+  "潛艇堡": "潛艇堡|subway",
+};
+
+// 對應到 OpenStreetMap 的料理分類標籤（補強店名比對不到的店）
+var CUISINE_TAGS = {
+  "火鍋": "hot_pot",
+  "壽司": "sushi|japanese",
+  "拉麵": "ramen",
+  "披薩": "pizza",
+  "牛排": "steak",
+  "咖哩飯": "curry",
+  "義大利麵": "italian",
+  "麥當勞": "burger",
+};
+
+// food 為空 = 找附近所有店家；有值（例如「火鍋」）= 只找賣那種食物的店
+function startNearbySearch(food) {
   if (!navigator.geolocation) {
     alert("這個瀏覽器不支援定位功能");
     return;
   }
   var btn = document.getElementById("nearbyBtn");
   btn.disabled = true;
-  btn.textContent = "📍 定位中…";
+  btn.textContent = food ? "📍 定位中…（找" + food + "）" : "📍 定位中…";
 
   navigator.geolocation.getCurrentPosition(
     function (pos) {
-      btn.textContent = "📍 搜尋附近店家中…";
-      fetchNearbyStores(pos.coords.latitude, pos.coords.longitude);
+      btn.textContent = food ? "📍 搜尋附近的" + food + "…" : "📍 搜尋附近店家中…";
+      fetchNearbyStores(pos.coords.latitude, pos.coords.longitude, food);
     },
     function (err) {
       resetNearbyBtn();
@@ -426,13 +459,29 @@ function findNearby() {
   );
 }
 
-function fetchNearbyStores(lat, lon) {
-  // 用 OpenStreetMap 的免費 Overpass API 查詢 800 公尺內有名字的餐廳
-  var query =
-    '[out:json][timeout:15];' +
-    '(node["amenity"~"restaurant|fast_food|cafe"]["name"](around:800,' + lat + ',' + lon + ');' +
-    'way["amenity"~"restaurant|fast_food|cafe"]["name"](around:800,' + lat + ',' + lon + '););' +
-    'out center 40;';
+function fetchNearbyStores(lat, lon, food) {
+  // 用 OpenStreetMap 的免費 Overpass API 查詢附近有名字的餐廳
+  // 找特定食物時範圍放大到 1500 公尺（符合條件的店比較少）
+  var radius = food ? 1500 : 800;
+  var amenity = '["amenity"~"restaurant|fast_food|cafe"]["name"]';
+  var around = '(around:' + radius + ',' + lat + ',' + lon + ');';
+  var parts = "";
+
+  if (food) {
+    var keyword = FOOD_KEYWORDS[food] || food;
+    parts += 'node' + amenity + '["name"~"' + keyword + '",i]' + around;
+    parts += 'way' + amenity + '["name"~"' + keyword + '",i]' + around;
+    var cuisine = CUISINE_TAGS[food];
+    if (cuisine) {
+      parts += 'node' + amenity + '["cuisine"~"' + cuisine + '",i]' + around;
+      parts += 'way' + amenity + '["cuisine"~"' + cuisine + '",i]' + around;
+    }
+  } else {
+    parts += 'node' + amenity + around;
+    parts += 'way' + amenity + around;
+  }
+
+  var query = '[out:json][timeout:15];(' + parts + ');out center 40;';
 
   fetch("https://overpass-api.de/api/interpreter", {
     method: "POST",
@@ -448,7 +497,11 @@ function fetchNearbyStores(lat, lon) {
 
       if (names.length < 2) {
         resetNearbyBtn();
-        alert("附近的地圖資料裡找不到足夠的店家 😢\n可以改用轉盤選「吃什麼類型」，再按結果視窗的「📍 用地圖找」。");
+        if (food) {
+          alert("附近的地圖資料裡找不到夠多賣「" + food + "」的店 😢\n可以按結果視窗的「📍 用地圖找」，用 Google 地圖搜尋更完整。");
+        } else {
+          alert("附近的地圖資料裡找不到足夠的店家 😢\n可以改用轉盤選「吃什麼類型」，再按結果視窗的「📍 用地圖找」。");
+        }
         return;
       }
 
@@ -458,8 +511,14 @@ function fetchNearbyStores(lat, lon) {
         return n.length > 10 ? n.slice(0, 9) + "…" : n;
       });
 
-      state.themes[NEARBY_THEME] = { options: picked, disabled: [] };
-      currentTheme = NEARBY_THEME;
+      // 只保留最新一個「📍」主題，避免主題列越積越多
+      var themeName = food ? "📍附近的" + food : NEARBY_THEME;
+      Object.keys(state.themes).forEach(function (name) {
+        if (name.indexOf("📍") === 0 && name !== themeName) delete state.themes[name];
+      });
+
+      state.themes[themeName] = { options: picked, disabled: [] };
+      currentTheme = themeName;
       saveState();
       resetNearbyBtn();
       renderAll();
@@ -479,9 +538,21 @@ function resetNearbyBtn() {
 // 轉出結果後，開 Google 地圖搜尋附近的店
 function openMap() {
   var result = document.getElementById("resultText").textContent;
-  // 如果轉的是「附近店家」，直接搜店名；否則搜「附近的 + 食物類型」
-  var keyword = currentTheme === NEARBY_THEME ? result : "附近的 " + result;
+  // 如果轉的是「📍」開頭的附近店家主題，直接搜店名；否則搜「附近的 + 食物類型」
+  var keyword = currentTheme.indexOf("📍") === 0 ? result : "附近的 " + result;
   window.open("https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(keyword), "_blank");
+}
+
+// 轉出結果後，把附近賣這種食物的店抓進轉盤再轉一次
+function spinNearbyStores() {
+  var food = document.getElementById("resultText").textContent;
+  hideResult();
+  // 如果轉的已經是店家轉盤，就不用再找了，直接開地圖看那家店
+  if (currentTheme.indexOf("📍") === 0) {
+    window.open("https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(food), "_blank");
+    return;
+  }
+  startNearbySearch(food);
 }
 
 // --- 畫面總更新 ---
@@ -507,8 +578,11 @@ document.getElementById("deleteThemeBtn").addEventListener("click", deleteTheme)
 document.getElementById("addOptionBtn").addEventListener("click", addOption);
 document.getElementById("keepAllBtn").addEventListener("click", keepAll);
 document.getElementById("savePresetBtn").addEventListener("click", savePreset);
-document.getElementById("nearbyBtn").addEventListener("click", findNearby);
+document.getElementById("nearbyBtn").addEventListener("click", function () {
+  startNearbySearch(null);
+});
 document.getElementById("mapBtn").addEventListener("click", openMap);
+document.getElementById("spinNearbyBtn").addEventListener("click", spinNearbyStores);
 
 // 在輸入框按 Enter 也能送出
 document.getElementById("newOptionInput").addEventListener("keydown", function (e) {
