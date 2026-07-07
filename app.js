@@ -110,15 +110,26 @@ function drawWheel() {
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // 文字：沿著扇形中線放
+    // 文字：順時針轉 90 度、沿扇形外緣擺放（指針指到的上方文字會是水平的，較好閱讀）
     ctx.save();
     ctx.translate(CENTER, CENTER);
     ctx.rotate(start + seg / 2);
-    ctx.textAlign = "right";
+    ctx.translate(RADIUS - 38, 0);
+    ctx.rotate(Math.PI / 2);
+    // 在轉盤下半部的文字會上下顛倒，多轉 180 度把它翻正
+    var mid = ((start + seg / 2) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+    if (mid > 0 && mid < Math.PI) ctx.rotate(Math.PI);
+    ctx.textAlign = "center";
     ctx.fillStyle = "#2b1233";
-    var fontSize = options.length > 12 ? 13 : (options.length > 10 ? 15 : 18);
+    var fontSize = options.length > 12 ? 14 : (options.length > 10 ? 16 : 18);
     ctx.font = "bold " + fontSize + "px 'Microsoft JhengHei', sans-serif";
-    ctx.fillText(label, RADIUS - 16, 6);
+    // 字太長就自動縮小，避免超出自己的扇形範圍
+    var maxWidth = (RADIUS - 38) * seg * 0.9;
+    while (fontSize > 10 && ctx.measureText(label).width > maxWidth) {
+      fontSize--;
+      ctx.font = "bold " + fontSize + "px 'Microsoft JhengHei', sans-serif";
+    }
+    ctx.fillText(label, 0, fontSize / 3);
     ctx.restore();
   });
 
