@@ -202,18 +202,53 @@ header h1 {
   font-weight: bold;
 }
 
-/* --- 選項編輯區 --- */
-.editor {
+/* --- 選項篩選區 --- */
+.editor,
+.presets {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 16px;
   padding: 20px;
   text-align: left;
+  margin-bottom: 16px;
 }
 
-.editor h2 {
+.editor h2,
+.presets h2 {
   font-size: 1.1rem;
-  margin-bottom: 12px;
+  margin-bottom: 6px;
   color: #d9ccf3;
+}
+
+.hint {
+  font-size: 0.85rem;
+  color: #8d7ab0;
+  margin-bottom: 12px;
+}
+
+.chip-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+#enabledCount {
+  font-size: 0.9rem;
+  color: #b9a8d8;
+}
+
+#keepAllBtn {
+  padding: 6px 14px;
+  border: 1px solid #5d3f8f;
+  border-radius: 14px;
+  background: transparent;
+  color: #d9ccf3;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+#keepAllBtn:hover {
+  background: #3c2a63;
 }
 
 #optionList {
@@ -225,23 +260,108 @@ header h1 {
 }
 
 #optionList li {
+  background: #3c2a63;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  padding: 7px 14px;
+  cursor: pointer;
+  user-select: none;
+  color: #f3eefc;
+}
+
+#optionList li:hover {
+  border-color: #7c4dff;
+}
+
+#optionList li.off {
+  opacity: 0.45;
+  text-decoration: line-through;
+  background: #241640;
+}
+
+.add-custom summary {
+  cursor: pointer;
+  color: #8d7ab0;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+
+/* --- 我的組合 --- */
+.save-preset {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.save-preset input {
+  flex: 1;
+  padding: 9px 14px;
+  border: 1px solid #5d3f8f;
+  border-radius: 10px;
+  background: #1d0f33;
+  color: #f3eefc;
+  font-size: 1rem;
+}
+
+.save-preset button {
+  padding: 9px 16px;
+  border: none;
+  border-radius: 10px;
+  background: #7c4dff;
+  color: #fff;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+#presetList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+#presetList li {
   display: flex;
   align-items: center;
-  gap: 6px;
-  background: #3c2a63;
-  border-radius: 16px;
-  padding: 6px 8px 6px 14px;
+  gap: 10px;
+  background: #241640;
+  border-radius: 12px;
+  padding: 10px 14px;
 }
 
-#optionList li button {
+#presetList li.empty {
+  color: #6d5a8f;
+  justify-content: center;
+}
+
+.preset-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.preset-info small {
+  color: #8d7ab0;
+}
+
+#presetList button.apply {
+  padding: 7px 18px;
+  border: none;
+  border-radius: 10px;
+  background: #06d6a0;
+  color: #06301f;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#presetList button.del {
   border: none;
   background: transparent;
-  color: #b9a8d8;
+  color: #8d7ab0;
   cursor: pointer;
-  font-size: 0.9rem;
 }
 
-#optionList li button:hover {
+#presetList button.del:hover {
   color: #ff7b54;
 }
 

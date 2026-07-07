@@ -40,14 +40,33 @@
       </div>
     </div>
 
-    <!-- 選項編輯區 -->
+    <!-- 選項篩選區：點選項決定保留或排除 -->
     <section class="editor">
-      <h2>編輯「<span id="currentThemeName"></span>」的選項</h2>
-      <ul id="optionList"></ul>
-      <div class="add-option">
-        <input type="text" id="newOptionInput" placeholder="輸入新選項，例如：火鍋" maxlength="12">
-        <button id="addOptionBtn">加入</button>
+      <h2>這一輪「<span id="currentThemeName"></span>」要轉哪些？</h2>
+      <p class="hint">點一下選項可以排除／保留，被排除的不會出現在轉盤上</p>
+      <div class="chip-tools">
+        <span id="enabledCount"></span>
+        <button id="keepAllBtn">全部保留</button>
       </div>
+      <ul id="optionList"></ul>
+      <details class="add-custom">
+        <summary>找不到想要的？自己加一個</summary>
+        <div class="add-option">
+          <input type="text" id="newOptionInput" placeholder="輸入新選項，例如：私房小店" maxlength="12">
+          <button id="addOptionBtn">加入</button>
+        </div>
+      </details>
+    </section>
+
+    <!-- 我的組合：儲存保留/排除的設定，一鍵套用 -->
+    <section class="presets">
+      <h2>💾 我的組合</h2>
+      <p class="hint">把目前保留的選項存成組合，下次一鍵套用就能直接開轉</p>
+      <div class="save-preset">
+        <input type="text" id="presetNameInput" placeholder="組合名稱，例如：減肥週晚餐" maxlength="12">
+        <button id="savePresetBtn">儲存目前組合</button>
+      </div>
+      <ul id="presetList"></ul>
     </section>
 
     <footer>
