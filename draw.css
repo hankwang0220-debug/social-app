@@ -1,0 +1,232 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", "Microsoft JhengHei", sans-serif;
+  background: linear-gradient(160deg, #2b1a4a, #12081f);
+  color: #f3eefc;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+.app {
+  width: 100%;
+  max-width: 560px;
+  padding: 24px 16px 40px;
+  text-align: center;
+}
+
+.back-link {
+  display: block;
+  text-align: left;
+  color: #8d7ab0;
+  text-decoration: none;
+  margin-bottom: 8px;
+}
+
+.back-link:hover {
+  color: #d9ccf3;
+}
+
+header h1 {
+  font-size: 2rem;
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  color: #b9a8d8;
+  margin-bottom: 20px;
+}
+
+/* --- 面板 --- */
+.panel {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.panel h2 {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  color: #d9ccf3;
+}
+
+.hint {
+  font-size: 0.85rem;
+  color: #8d7ab0;
+  margin-top: 10px;
+}
+
+/* --- 名單 --- */
+.add-name {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.add-name input {
+  flex: 1;
+  padding: 9px 14px;
+  border: 1px solid #5d3f8f;
+  border-radius: 10px;
+  background: #1d0f33;
+  color: #f3eefc;
+  font-size: 1rem;
+}
+
+.add-name button {
+  padding: 9px 22px;
+  border: none;
+  border-radius: 10px;
+  background: #7c4dff;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+#nameList {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+#nameList li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #3c2a63;
+  border-radius: 16px;
+  padding: 6px 8px 6px 14px;
+}
+
+#nameList li button {
+  border: none;
+  background: transparent;
+  color: #b9a8d8;
+  cursor: pointer;
+}
+
+#nameList li button:hover {
+  color: #ff7b54;
+}
+
+/* --- 三種抽法按鈕 --- */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.action-btn {
+  padding: 13px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ff7b54, #ffd166);
+  color: #3a1d00;
+  cursor: pointer;
+}
+
+.action-btn:hover {
+  transform: scale(1.02);
+}
+
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.group-action {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.group-action .action-btn {
+  flex: 1;
+}
+
+.group-action label {
+  color: #b9a8d8;
+  white-space: nowrap;
+}
+
+.group-action select {
+  padding: 6px 10px;
+  border: 1px solid #5d3f8f;
+  border-radius: 8px;
+  background: #1d0f33;
+  color: #f3eefc;
+  font-size: 1rem;
+  margin: 0 4px;
+}
+
+/* --- 結果區 --- */
+.result-panel.hidden {
+  display: none;
+}
+
+.result-panel h2 {
+  text-align: center;
+}
+
+.big-name {
+  font-size: 2.6rem;
+  font-weight: bold;
+  color: #ffd166;
+  text-align: center;
+  padding: 18px 0;
+}
+
+.big-name.final {
+  animation: pop 0.35s ease;
+}
+
+@keyframes pop {
+  from { transform: scale(0.5); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.group-card {
+  background: #241640;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+}
+
+.group-card b {
+  color: #7bed9f;
+}
+
+.order-list {
+  list-style: none;
+  text-align: center;
+}
+
+.order-list li {
+  font-size: 1.2rem;
+  padding: 6px 0;
+}
+
+.order-list .order-num {
+  display: inline-block;
+  width: 2em;
+  color: #ffd166;
+  font-weight: bold;
+}
+
+footer {
+  margin-top: 24px;
+  font-size: 0.85rem;
+  color: #6d5a8f;
+}

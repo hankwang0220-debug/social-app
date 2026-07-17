@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>抽籤器 | 今天要幹嘛？</title>
+  <link rel="stylesheet" href="draw.css">
+</head>
+<body>
+  <main class="app">
+    <a class="back-link" href="index.html">← 回首頁</a>
+    <header>
+      <h1>🎲 抽籤器</h1>
+      <p class="subtitle">誰付錢、誰先開始、怎麼分組，交給命運！</p>
+    </header>
+
+    <!-- 名單輸入區 -->
+    <section class="panel">
+      <h2>今天有誰？</h2>
+      <div class="add-name">
+        <input type="text" id="nameInput" placeholder="輸入名字，例如：小明" maxlength="10">
+        <button id="addNameBtn">加入</button>
+      </div>
+      <ul id="nameList"></ul>
+      <p class="hint" id="nameCount"></p>
+    </section>
+
+    <!-- 三種抽法 -->
+    <section class="actions">
+      <button class="action-btn" id="pickOneBtn">🎯 抽一個人</button>
+      <button class="action-btn" id="makeOrderBtn">🔢 排出順序</button>
+      <div class="group-action">
+        <button class="action-btn" id="makeGroupsBtn">👥 隨機分組</button>
+        <label>分成
+          <select id="groupCount">
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select>
+        組</label>
+      </div>
+    </section>
+
+    <!-- 結果顯示區 -->
+    <section class="panel result-panel hidden" id="resultPanel">
+      <h2 id="resultTitle"></h2>
+      <div id="resultArea"></div>
+    </section>
+
+    <footer>
+      <p>由 hankwang ＆ ben16172007 共同製作 🎮</p>
+    </footer>
+  </main>
+
+  <script src="draw.js"></script>
+</body>
+</html>
