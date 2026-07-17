@@ -1,0 +1,102 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", "Microsoft JhengHei", sans-serif;
+  background: linear-gradient(160deg, #2b1a4a, #12081f);
+  color: #f3eefc;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+.home {
+  width: 100%;
+  max-width: 560px;
+  padding: 40px 16px;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  color: #b9a8d8;
+  line-height: 1.7;
+  margin-bottom: 32px;
+}
+
+/* --- 模組卡片 --- */
+.modules {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.module-card {
+  display: block;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid #3c2a63;
+  border-radius: 18px;
+  padding: 20px 22px;
+  text-decoration: none;
+  color: #f3eefc;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+a.module-card:hover {
+  transform: translateY(-3px);
+  border-color: #7c4dff;
+}
+
+.module-icon {
+  font-size: 1.8rem;
+  display: inline-block;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.module-name {
+  font-size: 1.3rem;
+  font-weight: bold;
+  vertical-align: middle;
+}
+
+.module-desc {
+  display: block;
+  margin-top: 8px;
+  color: #b9a8d8;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.module-go {
+  display: block;
+  margin-top: 10px;
+  color: #ffd166;
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+
+/* 還沒做好的模組：變暗、不能點 */
+.module-card.coming {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.module-card.coming .module-go {
+  color: #8d7ab0;
+  font-weight: normal;
+}
+
+footer {
+  margin-top: 36px;
+  font-size: 0.85rem;
+  color: #6d5a8f;
+}

@@ -3,80 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>命運轉盤 | 選擇困難救星</title>
-  <link rel="stylesheet" href="style.css">
+  <title>今天要幹嘛？| 聚會救星</title>
+  <link rel="stylesheet" href="home.css">
 </head>
 <body>
-  <main class="app">
+  <main class="home">
     <header>
-      <h1>🎡 命運轉盤</h1>
-      <p class="subtitle">選擇困難嗎？讓轉盤幫你決定！</p>
+      <h1>🎲 今天要幹嘛？</h1>
+      <p class="subtitle">一群人出來卻不知道要做什麼？<br>讓隨機幫你們決定！</p>
     </header>
 
-    <!-- 主題切換列 -->
-    <nav class="themes" id="themeTabs"></nav>
-    <div class="theme-actions">
-      <input type="text" id="newThemeInput" placeholder="新主題名稱，例如：宵夜" maxlength="10">
-      <button id="addThemeBtn">＋新增主題</button>
-      <button id="deleteThemeBtn" title="刪除目前主題">🗑 刪除主題</button>
-    </div>
-    <button id="nearbyBtn" title="用你的位置找出附近的餐廳，變成轉盤選項">📍 找附近店家來轉</button>
+    <nav class="modules">
+      <a class="module-card" href="wheel.html">
+        <span class="module-icon">🎡</span>
+        <span class="module-name">命運轉盤</span>
+        <span class="module-desc">吃什麼、喝什麼、做什麼，轉了就知道。還能定位找出附近的店，轉到哪家吃哪家！</span>
+        <span class="module-go">開始玩 →</span>
+      </a>
 
-    <!-- 轉盤 -->
-    <div class="wheel-wrap">
-      <div class="pointer"></div>
-      <canvas id="wheel" width="420" height="420"></canvas>
-    </div>
-    <button id="spinBtn">開始轉！</button>
-
-    <!-- 結果視窗 -->
-    <div class="result-overlay hidden" id="resultOverlay">
-      <div class="result-card">
-        <p class="result-label">🎉 命運選中了 🎉</p>
-        <p class="result-text" id="resultText"></p>
-        <div class="result-buttons">
-          <button id="againBtn">再轉一次</button>
-          <button id="mapBtn">📍 用地圖找</button>
-          <button id="spinNearbyBtn">🎡 轉附近賣這個的店</button>
-          <button id="closeBtn">就決定是你了！</button>
-        </div>
+      <div class="module-card coming">
+        <span class="module-icon">🎲</span>
+        <span class="module-name">抽籤器</span>
+        <span class="module-desc">輸入大家的名字，隨機決定誰付錢、誰先開始、怎麼分組。</span>
+        <span class="module-go">敬請期待</span>
       </div>
-    </div>
 
-    <!-- 選項篩選區：點選項決定保留或排除 -->
-    <section class="editor">
-      <h2>這一輪「<span id="currentThemeName"></span>」要轉哪些？</h2>
-      <p class="hint">點一下選項可以排除／保留，被排除的不會出現在轉盤上</p>
-      <div class="chip-tools">
-        <span id="enabledCount"></span>
-        <button id="keepAllBtn">全部保留</button>
+      <div class="module-card coming">
+        <span class="module-icon">🃏</span>
+        <span class="module-name">任務卡</span>
+        <span class="module-desc">真心話、大冒險、快問快答，抽一張讓氣氛熱起來。</span>
+        <span class="module-go">敬請期待</span>
       </div>
-      <ul id="optionList"></ul>
-      <details class="add-custom">
-        <summary>找不到想要的？自己加一個</summary>
-        <div class="add-option">
-          <input type="text" id="newOptionInput" placeholder="輸入新選項，例如：私房小店" maxlength="12">
-          <button id="addOptionBtn">加入</button>
-        </div>
-      </details>
-    </section>
 
-    <!-- 我的組合：儲存保留/排除的設定，一鍵套用 -->
-    <section class="presets">
-      <h2>💾 我的組合</h2>
-      <p class="hint">把目前保留的選項存成組合，下次一鍵套用就能直接開轉</p>
-      <div class="save-preset">
-        <input type="text" id="presetNameInput" placeholder="組合名稱，例如：減肥週晚餐" maxlength="12">
-        <button id="savePresetBtn">儲存目前組合</button>
+      <div class="module-card coming">
+        <span class="module-icon">🍱</span>
+        <span class="module-name">懶人套餐</span>
+        <span class="module-desc">一鍵轉出完整行程：先吃什麼 → 再做什麼 → 誰請客。</span>
+        <span class="module-go">敬請期待</span>
       </div>
-      <ul id="presetList"></ul>
-    </section>
+    </nav>
 
     <footer>
       <p>由 hankwang ＆ ben16172007 共同製作 🎮</p>
     </footer>
   </main>
-
-  <script src="app.js"></script>
 </body>
 </html>

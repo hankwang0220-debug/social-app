@@ -20,6 +20,18 @@ body {
   text-align: center;
 }
 
+.back-link {
+  display: block;
+  text-align: left;
+  color: #8d7ab0;
+  text-decoration: none;
+  margin-bottom: 8px;
+}
+
+.back-link:hover {
+  color: #d9ccf3;
+}
+
 header h1 {
   font-size: 2rem;
   margin-bottom: 4px;
