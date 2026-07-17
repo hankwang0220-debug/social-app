@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>喝酒轉盤 | 今天要幹嘛？</title>
+  <link rel="stylesheet" href="party.css">
+</head>
+<body>
+  <main class="app">
+    <a class="back-link" href="index.html">← 回首頁</a>
+    <header>
+      <h1>🍻 喝酒轉盤</h1>
+      <p class="subtitle">多人連線！輪流轉盤，還有道具可以陷害朋友</p>
+    </header>
+
+    <!-- 大廳：開房間或加入房間 -->
+    <section id="lobby">
+      <div class="panel">
+        <h2>你的暱稱</h2>
+        <input type="text" id="nameInput" placeholder="例如：小明" maxlength="8">
+      </div>
+
+      <div class="panel">
+        <h2>🏠 開一個房間</h2>
+        <p class="hint">開好後把 4 位房號唸給朋友聽</p>
+        <button class="action-btn" id="createBtn">建立房間</button>
+      </div>
+
+      <div class="panel">
+        <h2>🚪 加入朋友的房間</h2>
+        <div class="join-row">
+          <input type="text" id="codeInput" placeholder="輸入 4 位房號" maxlength="4">
+          <button class="action-btn" id="joinBtn">加入</button>
+        </div>
+      </div>
+
+      <p class="hint" id="lobbyStatus"></p>
+    </section>
+
+    <!-- 房間：遊戲進行中 -->
+    <section id="room" class="hidden">
+      <div class="room-code">房號：<b id="roomCode"></b></div>
+
+      <ul id="playerList"></ul>
+
+      <div class="wheel-wrap">
+        <div class="pointer"></div>
+        <canvas id="wheel" width="420" height="420"></canvas>
+      </div>
+
+      <button class="action-btn" id="spinBtn">開始轉！</button>
+      <button id="windBtn">🌪️ 妖風（剩 1 次）</button>
+      <p class="hint">🌪️ 妖風：在別人轉的時候按下去，轉盤會被吹走…嘿嘿</p>
+
+      <div id="log"></div>
+    </section>
+
+    <!-- 結果視窗 -->
+    <div class="result-overlay hidden" id="resultOverlay">
+      <div class="result-card">
+        <p class="result-label" id="resultLabel"></p>
+        <p class="result-text" id="resultText"></p>
+        <button id="closeBtn">知道了！</button>
+      </div>
+    </div>
+
+    <footer>
+      <p>由 hankwang ＆ ben16172007 共同製作 🎮</p>
+    </footer>
+  </main>
+
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+  <script src="party.js"></script>
+</body>
+</html>
