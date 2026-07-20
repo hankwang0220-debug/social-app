@@ -3,10 +3,10 @@
 // 一個人「建立房間」當房主，其他人輸入房號加入。
 // 房主是遊戲的裁判：管理玩家名單、輪到誰、轉盤結果，再廣播給所有人。
 
+// 預設 7 格，格子少字才看得清楚
 var WHEEL_OPTIONS = [
   "自己喝一口", "左邊的人喝", "右邊的人喝", "全場一起喝",
-  "指定一人喝", "安全過關 😇", "喝兩口", "真心話",
-  "大冒險", "學動物叫 10 秒", "跟左邊交換座位", "再轉一次",
+  "指定一人喝", "真心話大冒險", "安全過關 😇",
 ];
 
 var COLORS = [
@@ -226,7 +226,7 @@ function drawWheel() {
     if (mid > 0 && mid < Math.PI) ctx.rotate(Math.PI);
     ctx.textAlign = "center";
     ctx.fillStyle = "#2b1233";
-    var fontSize = 13;
+    var fontSize = options.length > 10 ? 13 : 17;
     ctx.font = "bold " + fontSize + "px 'Microsoft JhengHei', sans-serif";
     var maxWidth = (RADIUS - 38) * seg * 0.9;
     while (fontSize > 9 && ctx.measureText(label).width > maxWidth) {
@@ -262,7 +262,7 @@ function startSpin() {
   spinnerName = players[turnIndex].name;
   var turns = 5 + Math.random() * 3;
   var target = rotation + turns * Math.PI * 2 + Math.random() * Math.PI * 2;
-  var duration = 5000;
+  var duration = 9000; // 拖長一點，尾段慢慢停才有緊張感
   broadcast({ type: "spin", startRot: rotation, target: target, duration: duration, spinnerName: spinnerName });
   addLog(spinnerName + " 轉動了轉盤！");
   startAnim(rotation, target, duration);
@@ -298,9 +298,12 @@ function armFinishTimer() {
 function frame(now) {
   if (!anim) return;
   var t = Math.min(1, (now - anim.t0) / (anim.t1 - anim.t0));
-  var eased = 1 - Math.pow(1 - t, 3);
+  // 五次方的減速曲線：前面轉超快，最後兩三秒一格一格慢慢爬
+  var eased = 1 - Math.pow(1 - t, 5);
   rotation = anim.start + (anim.target - anim.start) * eased;
   drawWheel();
+  // 轉動中，按鈕即時顯示指針現在指到什麼（看準時機放道具！）
+  document.getElementById("spinBtn").textContent = "🎯 " + pickWinner();
   if (t < 1) {
     requestAnimationFrame(frame);
   } else {
