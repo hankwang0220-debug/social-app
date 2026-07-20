@@ -258,6 +258,33 @@ header h1 {
   cursor: pointer;
 }
 
+/* 「指定一人喝」的點名按鈕 */
+#assignArea {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+#assignArea:empty {
+  display: none;
+}
+
+#assignArea button {
+  padding: 8px 18px;
+  border: 2px solid #ffd166;
+  border-radius: 10px;
+  background: transparent;
+  color: #ffd166;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+#assignArea button:hover {
+  background: rgba(255, 209, 102, 0.15);
+}
+
 footer {
   margin-top: 24px;
   font-size: 0.85rem;

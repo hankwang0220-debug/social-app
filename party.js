@@ -65,7 +65,7 @@ function createRoom() {
 
   peer.on("open", function () {
     isHost = true;
-    players = [{ id: "host", name: myName, wind: 1 }];
+    players = [{ id: "host", name: myName, wind: 1, drinks: 0 }];
     enterRoom(code);
   });
 
@@ -128,7 +128,7 @@ function enterRoom(code) {
 
 function handleHostMessage(conn, msg) {
   if (msg.type === "join") {
-    players.push({ id: conn.peer, name: msg.name, wind: 1 });
+    players.push({ id: conn.peer, name: msg.name, wind: 1, drinks: 0 });
     conns.push(conn);
     broadcast({ type: "log", text: msg.name + " 加入了房間 🍻" });
     addLog(msg.name + " 加入了房間 🍻");
@@ -141,6 +141,12 @@ function handleHostMessage(conn, msg) {
     }
   } else if (msg.type === "windRequest") {
     useWind(conn.peer);
+  } else if (msg.type === "assignDrink") {
+    // 只有這一輪轉盤的人才能指定別人喝
+    var sender = players.find(function (p) { return p.id === conn.peer; });
+    if (sender && sender.name === spinnerName) {
+      assignDrink(msg.targetId);
+    }
   }
 }
 
@@ -165,7 +171,7 @@ function broadcast(msg) {
 function broadcastState() {
   broadcast({
     type: "state",
-    players: players.map(function (p) { return { id: p.id, name: p.name, wind: p.wind }; }),
+    players: players.map(function (p) { return { id: p.id, name: p.name, wind: p.wind, drinks: p.drinks }; }),
     turnIndex: turnIndex,
     rotation: rotation,
   });
@@ -318,9 +324,11 @@ function onSpinEnd() {
   var result = pickWinner();
   document.getElementById("resultLabel").textContent = "🎯 " + spinnerName + " 轉到了…";
   document.getElementById("resultText").textContent = result;
+  renderAssignButtons(result);
   document.getElementById("resultOverlay").classList.remove("hidden");
 
   if (isHost) {
+    applyDrinkResult(result); // 自動幫該喝的人記一杯
     // 「再轉一次」就不換人，其他情況輪到下一位
     if (result !== "再轉一次" && players.length > 0) {
       turnIndex = (turnIndex + 1) % players.length;
@@ -329,6 +337,65 @@ function onSpinEnd() {
   }
   renderPlayers();
   updateButtons();
+}
+
+// 房主：依轉盤結果自動計算誰要喝，記到計分板上
+function applyDrinkResult(result) {
+  var idx = players.findIndex(function (p) { return p.name === spinnerName; });
+  if (idx === -1) return;
+  var n = players.length;
+  var drinkers = [];
+
+  if (result === "自己喝一口") {
+    drinkers = [players[idx]];
+  } else if (result === "左邊的人喝" && n > 1) {
+    drinkers = [players[(idx - 1 + n) % n]];
+  } else if (result === "右邊的人喝" && n > 1) {
+    drinkers = [players[(idx + 1) % n]];
+  } else if (result === "全場一起喝") {
+    drinkers = players.slice();
+  }
+  // 「指定一人喝」由轉的人自己按名字指定，不在這裡自動計
+
+  if (drinkers.length === 0) return;
+  drinkers.forEach(function (p) { p.drinks++; });
+  var text = "🍺 " + drinkers.map(function (p) { return p.name; }).join("、") + " 喝一杯！";
+  addLog(text);
+  broadcast({ type: "log", text: text });
+}
+
+// 轉到「指定一人喝」時，轉的人畫面上會出現所有人的名字按鈕
+function renderAssignButtons(result) {
+  var area = document.getElementById("assignArea");
+  area.innerHTML = "";
+  if (result !== "指定一人喝" || spinnerName !== myName) return;
+
+  document.getElementById("resultLabel").textContent = "🫵 換你點名！要誰喝？";
+  players.forEach(function (p) {
+    var btn = document.createElement("button");
+    btn.textContent = p.name;
+    btn.addEventListener("click", function () {
+      if (isHost) {
+        assignDrink(p.id);
+      } else {
+        hostConn.send({ type: "assignDrink", targetId: p.id });
+      }
+      document.getElementById("resultOverlay").classList.add("hidden");
+    });
+    area.appendChild(btn);
+  });
+}
+
+// 房主：把「指定一人喝」記到被點名的人身上
+function assignDrink(targetId) {
+  var target = players.find(function (p) { return p.id === targetId; });
+  if (!target) return;
+  target.drinks++;
+  var text = "🫵 " + spinnerName + " 指定 " + target.name + " 喝一杯！";
+  addLog(text);
+  broadcast({ type: "log", text: text });
+  broadcastState();
+  renderPlayers();
 }
 
 // ========== 🌪️ 妖風道具 ==========
@@ -367,7 +434,7 @@ function renderPlayers() {
   list.innerHTML = "";
   players.forEach(function (p, i) {
     var li = document.createElement("li");
-    var label = p.name + " " + "🌪️".repeat(p.wind);
+    var label = p.name + " " + "🌪️".repeat(p.wind) + " 🍺" + (p.drinks || 0);
     if (p.id === myId()) label += "（你）";
     li.textContent = label;
     if (i === turnIndex) li.classList.add("current-turn");
