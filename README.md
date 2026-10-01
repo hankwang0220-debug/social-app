@@ -52,6 +52,18 @@ git commit -m "說明你改了什麼"
 git push
 ```
 
+## 給新電腦 / 新 Claude session 的筆記
+
+換電腦或換一個全新的 Claude 對話接手這個專案時，看這段最快進入狀況：
+
+- **這是純前端專案**：只有 HTML / CSS / JS，沒有框架、沒有建置流程、沒有後端。打開 `index.html` 或用任何靜態伺服器跑起來就能看。
+- **資料存在瀏覽器的 localStorage**：沒有帳號系統、沒有資料庫。每個使用者的設定、名單、組合都只存在自己的瀏覽器裡。
+- **remote 名稱是 `myrepo`，不是 `origin`**：這個資料夾原本是 clone 自朋友的空 repo（`origin` = `ben16172007/hankwang`，已棄用），後來另外加了 `myrepo` 指向真正在用的 `hankwang0220-debug/social-app`。**推送前務必確認 `git push myrepo main`**，推到 `origin` 不會更新線上網站。
+- **線上版是 GitHub Pages**：推到 `myrepo` 的 `main` 分支後，GitHub 會自動重新部署 https://hankwang0220-debug.github.io/social-app/ ，通常 1～3 分鐘生效。
+- **喝酒轉盤（party.js）用 PeerJS / WebRTC**：採「房主權威」架構——房主的瀏覽器是遊戲邏輯的唯一真相來源（玩家名單、輪次、轉盤角度、計分），客人端只負責顯示和送出請求（spinRequest／windRequest／assignDrink），房主驗證後才廣播新狀態。改這個模組時要留意這個單向資料流，不要讓客人端自己改動共享狀態。
+- **程式碼風格**：所有 JS 都寫中文註解，變數命名和邏輯盡量白話——目標使用者是寫程式新手，之後維護也請保持這個風格。
+- **產品方向**：這不只是做好玩的小工具，而是在建立「一群人出去不知道要幹嘛時」的隨機活動決定平台。新模組的首頁卡片放在 `index.html`，照現有「🚧 規劃中」卡片的格式加新項目。
+
 ## 未來的點子
 
 - [ ] 轉盤加入音效
